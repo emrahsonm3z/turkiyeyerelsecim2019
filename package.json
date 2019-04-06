@@ -9,14 +9,23 @@
     "@types/react-dom": "16.8.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-hot-loader": "^4.8.3",
+    "react-loadable": "^5.5.0",
     "react-scripts": "2.1.8",
     "typescript": "3.4.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject",
+    "lint:ts": "tsc && tslint --project tsconfig.json",
+    "lint:css": "stylelint --syntax scss 'src/**/*.scss'",
+    "lint": "yarn run lint:ts && yarn run lint:css",
+    "format:ts": "prettier --write 'src/**/*.{ts,tsx}' && tslint --fix --project .",
+    "format:css": "prettier-stylelint --quiet --write 'src/**/*.scss'",
+    "format": "yarn run format:ts && yarn run format:css",
+    "format:check": "prettier -c 'src/**/*.{ts,tsx}'"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -26,5 +35,24 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@types/react-loadable": "^5.5.1",
+    "customize-cra": "^0.2.12",
+    "node-sass": "^4.11.0",
+    "prettier": "^1.16.4",
+    "prettier-stylelint": "^0.4.2",
+    "react-app-rewired": "^2.1.1",
+    "stylelint": "^9.10.1",
+    "stylelint-config-prettier": "^5.0.0",
+    "stylelint-config-sass-guidelines": "^5.3.0",
+    "stylelint-declaration-block-no-ignored-properties": "^1.1.0",
+    "stylelint-declaration-strict-value": "^1.1.2",
+    "stylelint-order": "^2.1.0",
+    "tslint": "^5.15.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-consistent-codestyle": "^1.15.1",
+    "tslint-react": "^4.0.0",
+    "tslint-react-a11y": "^1.0.0"
+  }
 }
