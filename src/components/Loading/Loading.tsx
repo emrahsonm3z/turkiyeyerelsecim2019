@@ -1,7 +1,8 @@
-import React from 'react';
-import './loader.scss';
+import React, { FunctionComponent } from 'react';
 
-const Loader = () => (
+import './Loading.scss';
+
+const Loader: FunctionComponent = () => (
   <svg
     className="spinner"
     width="60px"
