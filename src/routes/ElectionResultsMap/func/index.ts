@@ -46,8 +46,24 @@ const getPartyColor = (partyId: number, rateDifference: any): string => {
     : partyColorObj.dark;
 };
 
+/**
+ * @param allResult Kazanan adayların renklerinin atandığı liste
+ * Renklere göre gruplama
+ * Harita üzerinde farklı renklerin gösterilmesi için renk gruplarının series olarak verilecek.
+ */
+const groupingByColor = (allResult: Array<CalculatedElectionResult>) => {
+  const newArray = allResult.reduce((acc: any, curr: CalculatedElectionResult) => {
+    acc[curr.winner.color] = [...(acc[curr.winner.color] || []), curr];
+
+    return acc;
+  }, []);
+
+  console.log('groupingByColor', newArray);
+
+  return newArray;
+};
+
 const reproduceElectionResults = () => {
-  debugger;
   const newelectionResults = electionResults.reduce(
     (acc: Array<CalculatedElectionResult>, curr: ElectionResult) => {
       const totalVote = sumOfVotes(curr.results);
@@ -94,11 +110,11 @@ const reproduceElectionResults = () => {
     },
     [],
   );
-
   console.log('electionResults', electionResults);
   console.log('newelectionResults', newelectionResults);
-};
 
-const groupingByColor = () => {};
+  // return groupingByColor(newelectionResults);
+  return newelectionResults;
+};
 
 export { reproduceElectionResults };
