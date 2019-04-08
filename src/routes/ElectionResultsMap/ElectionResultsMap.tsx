@@ -58,12 +58,13 @@ class ElectionResultsMap extends Component<any, ElectionResultsMapState> {
         trigger: 'item',
         backgroundColor: 'transparent',
         formatter: function(params: any) {
-          let ht = `<div style="background: rgba(0, 0, 0, .9); max-width: 400px; color: #fff;border-radius: 5%; font-size: 12px;">
-          <div style="padding: 5px;">
+          let ht = `<div style="background: rgba(0, 0, 0, .9); max-width: 400px; color: #fff;border-radius: 5%; font-size: 16px;">
+          <div style="padding: 15px;">
           <div style="text-align: center;margin-bottom: 5px;">${titleCase(params.data.name)}</div>`;
           params.data.results.map(
-            (result: { name: any; voteRate: any; voteCount: any; icon: any }) =>
-              (ht += `<div><img style="vertical-align: middle;margin-right: 5px;" width="15" src=${
+            (result: { name: any; voteRate: any; voteCount: any; icon: any }, index: number) =>
+              index < 10 &&
+              (ht += `<div><img style="vertical-align: middle;margin-right: 5px;" width="20" src=${
                 result.icon
               } />${titleCase(result.name)} ${result.voteRate}% - ${result.voteCount}</div>`),
           );
