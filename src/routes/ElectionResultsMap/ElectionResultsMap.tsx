@@ -100,8 +100,15 @@ class ElectionResultsMap extends Component<{}, ElectionResultsMapState> {
         left: '10',
         zoom: 0.8,
         label: {
+          show: true,
+          fontSize: 12,
+          fontWeight: 'bold',
+          color: '#fff',
           emphasis: {
-            show: false, // il isimleri
+            show: true, // il isimleri
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: '#fff',
           },
         },
         roam: true,
@@ -126,13 +133,13 @@ class ElectionResultsMap extends Component<{}, ElectionResultsMapState> {
               ],
               globalCoord: false, //
             },
-            shadowColor: 'grey',
+            shadowColor: '#ffec99',
             shadowOffsetX: -1,
-            shadowOffsetY: 1,
-            shadowBlur: 12,
+            shadowOffsetY: 0,
+            shadowBlur: 2,
           },
           emphasis: {
-            areaColor: '#FFF',
+            areaColor: '#404a59',
             borderWidth: 0,
           },
         },
@@ -150,6 +157,9 @@ class ElectionResultsMap extends Component<{}, ElectionResultsMapState> {
 
                 return color;
               },
+            },
+            emphasis: {
+              areaColor: '#2B91B7',
             },
           },
           data: data,
