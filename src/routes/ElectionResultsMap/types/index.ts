@@ -33,6 +33,7 @@ export type PartyColors = {
   light: string;
   normal: string;
   dark: string;
+  icon?: any;
 };
 
 export type Party = {

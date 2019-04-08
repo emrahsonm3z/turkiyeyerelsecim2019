@@ -13,10 +13,6 @@ type ElectionResultsMapState = {
   data: any;
 };
 
-const capitalize = function(text: string) {
-  return text.replace(/^\w/, c => c.toUpperCase());
-};
-
 function titleCase(str: string) {
   var splitStr = str.toLowerCase().split(' ');
   for (var i = 0; i < splitStr.length; i++) {
@@ -62,14 +58,14 @@ class ElectionResultsMap extends Component<any, ElectionResultsMapState> {
         trigger: 'item',
         backgroundColor: 'transparent',
         formatter: function(params: any) {
-          let ht = `<div style="background: rgba(0, 0, 0, .9); max-width: 400px; color: #fff;border-radius: 5%;">
-          <div style="padding: 15px;">
-          <div>${titleCase(params.data.name)}</div>`;
+          let ht = `<div style="background: rgba(0, 0, 0, .9); max-width: 400px; color: #fff;border-radius: 5%; font-size: 12px;">
+          <div style="padding: 5px;">
+          <div style="text-align: center;margin-bottom: 5px;">${titleCase(params.data.name)}</div>`;
           params.data.results.map(
-            (result: { name: any; voteRate: any; voteCount: any }) =>
-              (ht += `<div>${titleCase(result.name)} ${result.voteRate}% - ${
-                result.voteCount
-              }</div>`),
+            (result: { name: any; voteRate: any; voteCount: any; icon: any }) =>
+              (ht += `<div><img style="vertical-align: middle;margin-right: 5px;" width="15" src=${
+                result.icon
+              } />${titleCase(result.name)} ${result.voteRate}% - ${result.voteCount}</div>`),
           );
 
           ht += `</div>
@@ -77,8 +73,9 @@ class ElectionResultsMap extends Component<any, ElectionResultsMapState> {
 
           return ht;
         },
+        // position: ['1%', '5%'],
         textStyle: {
-          fontSize: '16px',
+          fontSize: '12px',
         },
       },
       toolbox: {
@@ -95,10 +92,8 @@ class ElectionResultsMap extends Component<any, ElectionResultsMapState> {
       geo: {
         map: 'turkey',
         right: '10',
-        top: '13%',
+        top: '5%',
         left: '10',
-        // center: [31.502003, 39.453424],
-        // // zoom: 2,
         zoom: 0.8,
         label: {
           emphasis: {
@@ -106,20 +101,10 @@ class ElectionResultsMap extends Component<any, ElectionResultsMapState> {
           },
         },
         roam: true,
-        // itemStyle: {
-        //   normal: {
-        //     areaColor: "#323c48",
-        //     borderColor: "#111"
-        //   },
-        //   emphasis: {
-        //     areaColor: "#2a333d"
-        //   }
-        // }
         itemStyle: {
           normal: {
-            //         	color: '#ddd',
-            // borderColor: 'rgba(147, 235, 248, 1)',
-            // borderWidth: 1,
+            borderColor: '#eee',
+            borderWidth: 1,
             areaColor: {
               type: 'radial',
               x: 0.5,
@@ -128,20 +113,19 @@ class ElectionResultsMap extends Component<any, ElectionResultsMapState> {
               colorStops: [
                 {
                   offset: 0,
-                  color: 'rgba(175,238,238, 0)', // 0% 处的颜色
+                  color: 'rgba(175,238,238, 0)',
                 },
                 {
                   offset: 1,
-                  color: 'rgba(	47,79,79, .2)', // 100% 处的颜色
+                  color: 'rgba(	47,79,79, .2)', // 100%
                 },
               ],
-              globalCoord: false, // 缺省为 false
+              globalCoord: false, //
             },
-            // shadowColor: 'rgba(128, 217, 248, 1)',
-            // // shadowColor: 'rgba(255, 255, 255, 1)',
-            // shadowOffsetX: -2,
-            // shadowOffsetY: 2,
-            // shadowBlur: 10,
+            shadowColor: 'grey',
+            shadowOffsetX: -1,
+            shadowOffsetY: 1,
+            shadowBlur: 12,
           },
           emphasis: {
             areaColor: '#389BB7',
@@ -176,7 +160,7 @@ class ElectionResultsMap extends Component<any, ElectionResultsMapState> {
         <div className="parent">
           <ReactEcharts
             option={this.state.option}
-            style={{ height: '700px', width: '100%' }}
+            style={{ height: '100vh', width: '100vw' }}
             className="react_for_echarts"
           />
         </div>

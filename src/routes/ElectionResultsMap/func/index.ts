@@ -2,7 +2,7 @@ import electionResults from '../data/secim.json';
 
 import {
   PARTIES,
-  COLORS,
+  PARTY_PROPS,
   RATE_DIFFERENCE_FOR_LIGHT,
   RATE_DIFFERENCE_FOR_NORMAL,
 } from '../constants';
@@ -34,8 +34,8 @@ const getPartyColor = (partyId: number, rateDifference: any): string => {
   // PARTIES array içerinde aday yoksa bağımsız aday demektir. Bu türdeki kazanan adaylara COLORS array'inde ki ilk eleman atanacaktır.
   let partyColorObj: PartyColors | undefined;
   if (PARTIES.some(p => p.id === partyId)) {
-    partyColorObj = COLORS.find(c => c.partyId === partyId);
-  } else partyColorObj = COLORS[0];
+    partyColorObj = PARTY_PROPS.find(c => c.partyId === partyId);
+  } else partyColorObj = PARTY_PROPS[0];
 
   return typeof partyColorObj === 'undefined'
     ? '#ffffff'
@@ -44,23 +44,6 @@ const getPartyColor = (partyId: number, rateDifference: any): string => {
     : rateDifference <= RATE_DIFFERENCE_FOR_NORMAL
     ? partyColorObj.normal
     : partyColorObj.dark;
-};
-
-/**
- * @param allResult Kazanan adayların renklerinin atandığı liste
- * Renklere göre gruplama
- * Harita üzerinde farklı renklerin gösterilmesi için renk gruplarının series olarak verilecek.
- */
-const groupingByColor = (allResult: Array<CalculatedElectionResult>) => {
-  const newArray = allResult.reduce((acc: any, curr: CalculatedElectionResult) => {
-    acc[curr.winner.color] = [...(acc[curr.winner.color] || []), curr];
-
-    return acc;
-  }, []);
-
-  console.log('groupingByColor', newArray);
-
-  return newArray;
 };
 
 const reproduceElectionResults = () => {
@@ -74,9 +57,12 @@ const reproduceElectionResults = () => {
         (accCalculatedCandidate: Array<CalculatedCandidate>, currCandidate: Candidate) => {
           const voteCount = parseInt(currCandidate.voteCount);
 
+          const partyProps = PARTY_PROPS.find(c => c.partyId === currCandidate.id);
+
           const newCalculatedCandidate = {
             ...currCandidate,
             voteRate: ((voteCount / totalVote) * 100).toFixed(2),
+            icon: typeof partyProps !== 'undefined' ? partyProps.icon : PARTY_PROPS[0].icon,
           };
 
           accCalculatedCandidate.push(newCalculatedCandidate);
@@ -113,7 +99,6 @@ const reproduceElectionResults = () => {
   console.log('electionResults', electionResults);
   console.log('newelectionResults', newelectionResults);
 
-  // return groupingByColor(newelectionResults);
   return newelectionResults;
 };
 
