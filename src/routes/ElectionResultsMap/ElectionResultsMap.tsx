@@ -4,6 +4,7 @@ import echarts from 'echarts/lib/echarts';
 import 'echarts/lib/chart/map';
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/geo';
+import 'echarts/lib/component/graphic';
 import 'echarts/lib/component/title';
 import 'echarts/lib/component/toolbox';
 
@@ -144,6 +145,19 @@ class ElectionResultsMap extends Component<{}, ElectionResultsMapState> {
           },
         },
       },
+      graphic: [
+        {
+          type: 'text',
+          z: 100,
+          top: '95%',
+          left: 'center',
+          style: {
+            fill: '#fff',
+            text: 'Sonuçları görmek için mouse ile harita üzerinde dolaşınız.',
+            font: 'calc(.5vw + 10px) "Roboto", sans-serif',
+          },
+        },
+      ],
       series: [
         {
           type: 'map',
