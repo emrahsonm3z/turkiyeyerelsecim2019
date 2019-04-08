@@ -28,7 +28,7 @@ export interface CalculatedElectionResult {
   winner: WinnerCandidate;
 }
 
-export type PartyColors = {
+export type PartyProps = {
   partyId: number;
   light: string;
   normal: string;

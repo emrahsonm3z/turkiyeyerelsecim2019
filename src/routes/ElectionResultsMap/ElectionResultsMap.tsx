@@ -2,32 +2,26 @@ import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import echarts from 'echarts';
 
-import { reproduceElectionResults } from './func';
+import { getElectionResults, getPartyIcon } from './func';
+import { CalculatedElectionResult } from './types';
 
 import turkeyGeoMapData from './data/tr.json';
 
-const data = reproduceElectionResults();
+const data = getElectionResults();
 
 type ElectionResultsMapState = {
   option: any;
   data: any;
 };
 
-function titleCase(str: string) {
+const titleCase = (str: string): string => {
   var splitStr = str.toLowerCase().split(' ');
   for (var i = 0; i < splitStr.length; i++) {
-    // You do not need to check if i is larger than splitStr length, as your for does that for you
-    // Assign it back to the array
     splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
   }
-  // Directly return the joined string
   return splitStr.join(' ');
-}
-class ElectionResultsMap extends Component<any, ElectionResultsMapState> {
-  state: {
-    option: any;
-    data: any;
-  };
+};
+class ElectionResultsMap extends Component<{}, ElectionResultsMapState> {
   constructor(props: any) {
     super(props);
     this.registerMap();
@@ -37,7 +31,9 @@ class ElectionResultsMap extends Component<any, ElectionResultsMapState> {
   registerMap = () => {
     echarts.registerMap('turkey', turkeyGeoMapData);
   };
+
   getInitialState = () => ({ option: this.getOption(data), data: data });
+
   getOption = (data: any): any => {
     return {
       backgroundColor: '#404a59',
@@ -62,11 +58,14 @@ class ElectionResultsMap extends Component<any, ElectionResultsMapState> {
           <div style="padding: 15px;">
           <div style="text-align: center;margin-bottom: 5px;">${titleCase(params.data.name)}</div>`;
           params.data.results.map(
-            (result: { name: any; voteRate: any; voteCount: any; icon: any }, index: number) =>
-              index < 10 &&
-              (ht += `<div><img style="vertical-align: middle;margin-right: 5px;" width="20" src=${
-                result.icon
-              } />${titleCase(result.name)} ${result.voteRate}% - ${result.voteCount}</div>`),
+            (
+              result: { id: number; name: any; voteRate: any; voteCount: any; icon: any },
+              index: number,
+            ) =>
+              index < 15 && // Max 15 aday gösterilsin.
+              (ht += `<div><img style="vertical-align: middle;margin-right: 5px;" width="20" src=${getPartyIcon(
+                result.id,
+              )} />${titleCase(result.name)} ${result.voteRate}% - ${result.voteCount}</div>`),
           );
 
           ht += `</div>
@@ -129,7 +128,7 @@ class ElectionResultsMap extends Component<any, ElectionResultsMapState> {
             shadowBlur: 12,
           },
           emphasis: {
-            areaColor: '#389BB7',
+            areaColor: '#FFF',
             borderWidth: 0,
           },
         },
@@ -142,7 +141,7 @@ class ElectionResultsMap extends Component<any, ElectionResultsMapState> {
             normal: {
               borderColor: 'white',
               color: function(obj: any) {
-                if (typeof obj.data === 'undefined') return '#fff';
+                if (typeof obj.data === 'undefined') return '#000';
                 var color = obj.data.winner.color;
 
                 return color;
@@ -157,14 +156,12 @@ class ElectionResultsMap extends Component<any, ElectionResultsMapState> {
 
   render() {
     return (
-      <div className="examples">
-        <div className="parent">
-          <ReactEcharts
-            option={this.state.option}
-            style={{ height: '100vh', width: '100vw' }}
-            className="react_for_echarts"
-          />
-        </div>
+      <div className="parent">
+        <ReactEcharts
+          option={this.state.option}
+          style={{ height: '100vh', width: '100vw' }}
+          className="react_for_echarts"
+        />
       </div>
     );
   }

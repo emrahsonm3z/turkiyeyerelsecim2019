@@ -10,7 +10,7 @@ import {
 import {
   Candidate,
   CalculatedCandidate,
-  PartyColors,
+  PartyProps,
   CalculatedElectionResult,
   ElectionResult,
 } from '../types';
@@ -32,46 +32,55 @@ const sortVotes = (results: Array<Candidate>) =>
  */
 const getPartyColor = (partyId: number, rateDifference: any): string => {
   // PARTIES array içerinde aday yoksa bağımsız aday demektir. Bu türdeki kazanan adaylara COLORS array'inde ki ilk eleman atanacaktır.
-  let partyColorObj: PartyColors | undefined;
+  let partyPropsObj: PartyProps | undefined;
   if (PARTIES.some(p => p.id === partyId)) {
-    partyColorObj = PARTY_PROPS.find(c => c.partyId === partyId);
-  } else partyColorObj = PARTY_PROPS[0];
+    partyPropsObj = PARTY_PROPS.find(c => c.partyId === partyId);
+  } else partyPropsObj = PARTY_PROPS[0];
 
-  return typeof partyColorObj === 'undefined'
+  return typeof partyPropsObj === 'undefined'
     ? '#ffffff'
     : rateDifference <= RATE_DIFFERENCE_FOR_LIGHT
-    ? partyColorObj.light
+    ? partyPropsObj.light
     : rateDifference <= RATE_DIFFERENCE_FOR_NORMAL
-    ? partyColorObj.normal
-    : partyColorObj.dark;
+    ? partyPropsObj.normal
+    : partyPropsObj.dark;
 };
 
-const reproduceElectionResults = () => {
+/**
+ * Seçim sonuçlarına adaylara oy oranı bilgisinin sonuçlara eklenmesi
+ *  id: number;
+ *  name: string;
+ *  voteCount: string;
+ *  voteRate: string;
+ */
+const createNewCalculatedCandidate = (results: Array<Candidate>): Array<CalculatedCandidate> => {
+  const totalVote = sumOfVotes(results);
+
+  return results.reduce(
+    (accCalculatedCandidate: Array<CalculatedCandidate>, currCandidate: Candidate) => {
+      const voteCount = parseInt(currCandidate.voteCount);
+
+      const newCalculatedCandidate = {
+        ...currCandidate,
+        voteRate: ((voteCount / totalVote) * 100).toFixed(2),
+      };
+
+      accCalculatedCandidate.push(newCalculatedCandidate);
+
+      return accCalculatedCandidate;
+    },
+    [],
+  );
+};
+
+const getElectionResults = (): Array<CalculatedElectionResult> => {
   const newelectionResults = electionResults.reduce(
     (acc: Array<CalculatedElectionResult>, curr: ElectionResult) => {
-      const totalVote = sumOfVotes(curr.results);
-
       curr.results = sortVotes(curr.results);
 
-      const newResult = curr.results.reduce(
-        (accCalculatedCandidate: Array<CalculatedCandidate>, currCandidate: Candidate) => {
-          const voteCount = parseInt(currCandidate.voteCount);
+      const newResult = createNewCalculatedCandidate(curr.results);
 
-          const partyProps = PARTY_PROPS.find(c => c.partyId === currCandidate.id);
-
-          const newCalculatedCandidate = {
-            ...currCandidate,
-            voteRate: ((voteCount / totalVote) * 100).toFixed(2),
-            icon: typeof partyProps !== 'undefined' ? partyProps.icon : PARTY_PROPS[0].icon,
-          };
-
-          accCalculatedCandidate.push(newCalculatedCandidate);
-
-          return accCalculatedCandidate;
-        },
-        [],
-      );
-
+      // Oy oranı farkına göre renk belirleme
       const rateDifference = (
         parseFloat(newResult[0].voteRate) - parseFloat(newResult[1].voteRate)
       ).toFixed(2);
@@ -102,4 +111,9 @@ const reproduceElectionResults = () => {
   return newelectionResults;
 };
 
-export { reproduceElectionResults };
+const getPartyIcon = (partyId: number) => {
+  const partyProps = PARTY_PROPS.find(p => p.partyId === partyId);
+  return typeof partyProps !== 'undefined' ? partyProps.icon : PARTY_PROPS[0].icon;
+};
+
+export { getElectionResults, getPartyIcon };

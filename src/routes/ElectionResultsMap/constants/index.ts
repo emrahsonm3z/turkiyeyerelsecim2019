@@ -1,4 +1,4 @@
-import { Party, PartyColors } from '../types';
+import { Party, PartyProps } from '../types';
 
 import chp from '../../../images/chp.png';
 import akp from '../../../images/akp.png';
@@ -37,7 +37,7 @@ export const PARTIES: Array<Party> = [
  * https://yeun.github.io/open-color/
  */
 
-export const PARTY_PROPS: Array<PartyColors> = [
+export const PARTY_PROPS: Array<PartyProps> = [
   { partyId: 0, light: '#B9770E', normal: '#9C640C', dark: '#784212', icon: tr }, // Gray
   { partyId: 1, light: '#bac8ff', normal: '#5c7cfa', dark: '#3b5bdb', icon: saadet }, // Indigo
   { partyId: 2, light: '#99e9f2', normal: '#22b8cf', dark: '#0c8599', icon: btp }, // Cyan
